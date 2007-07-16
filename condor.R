@@ -21,8 +21,8 @@ append.pars <- function(pars=NULL,
     oldpars <- read.table(parfile)
     run.offset <- max(oldpars[,"run"])
   } else {
-    partab <- NULL
     run.offset <- 0
+    oldpars <- NULL
   }
 
   ## Create table of parameters
@@ -94,6 +94,7 @@ Requirements = Memory >= ", memory, "
 ", sep=""),file=paste(prefix,"/",submit.file,sep=""))
   for (i in runs) {
     cat(paste("Environment = i=", i,"\n",
+              "Arguments = ", i,"\n", 
               "Error = sim", i, ".err\n",
               "Log = sim", i, ".log\n",
               "Queue\n", sep=""),
