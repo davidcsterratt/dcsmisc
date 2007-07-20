@@ -25,3 +25,13 @@ get.dataset <- function(dataset, i) {
   eval(parse(text=paste(dataset, "[[", i , "]] <<- dat",sep="")))
   return(dat)
 }
+
+## Filter table tab by the values of table headings specified in the list
+## filt
+filter.table <- function(tab, filt=list()) {
+  if (length(filt) >= 1) {
+    return(filter.table(tab[tab[,names(filt[1])] %in% filt[1],], filt[-1]))
+  } else {
+    return(tab)
+  }
+}
