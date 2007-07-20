@@ -29,6 +29,13 @@ get.dataset <- function(dataset, i) {
 ## Filter table tab by the values of table headings specified in the list
 ## filt
 filter.table <- function(tab, filt=list()) {
+  missing <- ((names(filt) %in% names(tab))==FALSE)
+  if (any(missing)) {
+    print("filter.table: These filters do not exist in table:")
+    print(names(filt)[which(missing)])
+    print("Choose from:")
+    print(names(tab))
+  }
   if (length(filt) >= 1) {
     return(filter.table(tab[tab[,names(filt[1])] %in% filt[1],], filt[-1]))
   } else {
