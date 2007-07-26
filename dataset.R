@@ -1,29 +1,56 @@
+# Get parameter file. At the moment this data is not cached.
+get.pars <- function(parfile="pars.dat") {
+  pars <- try(read.table(file=parfile,header=TRUE),TRUE)
+  if (inherits(dat,"try-error")) {
+    stop(paste("get.pars: Parameter file", parfile, "not found"))
+  }
+  return(pars)
+}
+
 ## Get dataset i.
 ## The first time this data is read it is loaded from file, and then cached.
 ## On subsequent calls, it is retreived from the cache
 
 get.dataset <- function(dataset, i) {
-  ## Create list if it doesn't exist
-  if (!exists(dataset)) {
-    eval(parse(text=paste(dataset, " <<- list()")))
+  ## Create cache list if it doesn't exist 
+  cachename <- paste("cache.", dataset, sep="")
+  if (!exists(cachename)) {
+    eval(parse(text=paste(cachename, "<<- list()")))
   }
-  ## The data may be there
-  if (eval(parse(text=paste("length(", dataset, ") >=", i)))) {
-    ## So check...
-    dat <- eval(parse(text=paste(dataset, "[[", i, "]]",sep=""))) 
-    if (!is.null(dat)) {
-      return(dat) 
+       
+  ## Collect data from the cache if it is there
+  if (eval(parse(text=paste("length(", cachename, ") >= i")))) {
+    if (eval(parse(text=paste("!is.null(", cachename, "[[i]])", sep="")))) {
+      return(eval(parse(text=paste(cachename, "[[i]]", sep=""))))
     }
   }
-  ## Read the file
-  dat <- try(read.table(file=sprintf("%s-%05d",dataset,i),header=TRUE),TRUE)
-  if (inherits(dat,"try-error")) {
-    dat <- NA
-  }
 
-  ## Cache the data before returning
-  eval(parse(text=paste(dataset, "[[", i , "]] <<- dat",sep="")))
+  ## Otherwise read the file
+  dat <- try(read.table(file=sprintf("%s-%05d",dataset,i),header=TRUE),TRUE)
+  if (!inherits(dat,"try-error")) {
+    ## Cache the data before returning
+    eval(parse(text=paste(cachename, "[[i]] <<- dat", sep="")))
+    return(dat)
+  }
+  return(NULL)
+}
+
+## Get a number of datasets and return as a list
+get.datasets <- function(dataset, inds) {
+  dat <- list()
+  for (i in inds) {
+    dat[[i]] <- get.dataset(dataset, i)
+  }
   return(dat)
+}
+
+## Report the run numbers of any data missing from all the runs specified in
+## the parameter file
+find.missing.datasets <- function(dataset, ...) {
+  pars <- get.pars(...)
+  runs <- pars[,"run"]
+  dat <- get.datasets(dataset, runs)
+  return(runs[sapply(dat, is.null)])
 }
 
 ## Filter table tab by the values of table headings specified in the list
