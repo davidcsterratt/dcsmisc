@@ -89,6 +89,7 @@ Arguments = ", arguments, "
 Initialdir   = ", prefix, "
 Input = ", input, "
 Getenv = true
+on_exit_remove = (ExitBySignal == False) || (ExitSignal != 9)
 Notification = Always
 Requirements = Memory >= ", memory, "
 ", sep=""),file=paste(prefix,"/",submit.file,sep=""))
