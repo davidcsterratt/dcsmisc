@@ -1,7 +1,7 @@
 # Get parameter file. At the moment this data is not cached.
 get.pars <- function(parfile="pars.dat") {
   pars <- try(read.table(file=parfile,header=TRUE),TRUE)
-  if (inherits(dat,"try-error")) {
+  if (inherits(pars,"try-error")) {
     stop(paste("get.pars: Parameter file", parfile, "not found"))
   }
   return(pars)
