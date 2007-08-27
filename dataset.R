@@ -11,7 +11,7 @@ get.pars <- function(parfile="pars.dat") {
 ## The first time this data is read it is loaded from file, and then cached.
 ## On subsequent calls, it is retreived from the cache
 
-get.dataset <- function(dataset, i) {
+get.dataset <- function(dataset, i, cache=TRUE) {
   ## Create cache list if it doesn't exist 
   cachename <- paste("cache.", dataset, sep="")
   if (!exists(cachename)) {
@@ -19,7 +19,7 @@ get.dataset <- function(dataset, i) {
   }
        
   ## Collect data from the cache if it is there
-  if (eval(parse(text=paste("length(", cachename, ") >= i")))) {
+  if (cache & eval(parse(text=paste("length(", cachename, ") >= i")))) {
     if (eval(parse(text=paste("!is.null(", cachename, "[[i]])", sep="")))) {
       return(eval(parse(text=paste(cachename, "[[i]]", sep=""))))
     }
