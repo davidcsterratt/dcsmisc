@@ -1,8 +1,38 @@
-# Get parameter file. At the moment this data is not cached.
-get.pars <- function(parfile="pars.dat") {
-  pars <- try(read.table(file=parfile,header=TRUE),TRUE)
-  if (inherits(pars,"try-error")) {
-    stop(paste("get.pars: Parameter file", parfile, "not found"))
+## Read parameter file, returning data as a table
+read.pars <- function(id=NULL, file="pars.dat") {
+  pars <- try(read.table(file), TRUE)
+  if (inherits(pars, "try-error")) {
+    return(NULL)
+  }
+  if (is.null(id)) {
+    return(pars)
+  }
+  if (id>dim(pars)[1]) {
+    return(NULL)
+  }
+  return(pars[id,])
+}
+
+## Write parameter file, returning data as a table
+write.pars <- function(pars, file="pars.dat") {
+  old.pars <- read.pars(file=file)
+  if(!is.null(old.pars)) {
+    id <- dim(old.pars)[1] + 1
+    pars <- data.frame(id=id, pars)
+    pars <- merge(old.pars, pars, all=TRUE)
+  } else {
+    id <- 1
+    pars <- data.frame(id=id, pars)
+    warning("New parameter file created")
+  }
+  write.table(pars, file)
+}
+
+## Get parameter file. 
+get.pars <- function(file="pars.dat") {
+  pars <- read.pars(file=file)
+  if (is.null(pars)) {
+    stop(paste("get.pars: Parameter file", file, "not found"))
   }
   return(pars)
 }
