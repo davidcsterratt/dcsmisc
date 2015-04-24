@@ -1,4 +1,11 @@
-## Read parameter file, returning data as a table
+##' Read a parameter file, in which each row contains a set of parameters.
+##' @title Read parameter file
+##' @param id Identity of parameter set in file to read
+##' @param file Name of file
+##' @return If \code{id} is specified, return return parameters from
+##' row of parameter table specified by \code{id}; otherwise return
+##' whole table
+##' @author David Sterratt
 read.pars <- function(id=NULL, file="pars.dat") {
   pars <- try(read.table(file), TRUE)
   if (inherits(pars, "try-error")) {
