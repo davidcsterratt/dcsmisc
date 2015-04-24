@@ -117,12 +117,22 @@ write.dataset <- function(x, dataset, suffix=".dat") {
 find.missing.datasets <- function(dataset, ...) {
   pars <- get.pars(...)
   runs <- pars[,"run"]
-  dat <- get.datasets(dataset, runs)
+  dat <- read.datasets(dataset, runs)
   return(runs[sapply(dat, is.null)])
 }
 
-## Filter table tab by the values of table headings specified in the list
-## filt
+##' @title Filter data frame
+##' @param tab Data frame to filter
+##' @param filt List of values of table headings to filter on
+##' @return Filtered data frame
+##' @author David Sterratt
+##' @export
+##' @examples
+##' dat <- data.frame(a=1:5,
+##'                   b=c(2, 2, 3, 3, 3),
+##'                   c=c(5, 5, 5, 7, 7))
+##' filter.table(dat, list(a=1))
+##' filter.table(dat, list(b=3, c=5))
 filter.table <- function(tab, filt=list()) {
   missing <- ((names(filt) %in% names(tab))==FALSE)
   if (any(missing)) {
