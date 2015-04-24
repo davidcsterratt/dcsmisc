@@ -33,6 +33,7 @@ write.pars <- function(pars, file="pars.dat") {
     warning("New parameter file created")
   }
   write.table(pars, file)
+  return(id)
 }
 
 ## Get parameter file. 
@@ -47,8 +48,12 @@ get.pars <- function(file="pars.dat") {
 ## Get dataset i.
 ## The first time this data is read it is loaded from file, and then cached.
 ## On subsequent calls, it is retreived from the cache
-
-get.dataset <- function(dataset, i, cache=TRUE) {
+read.dataset <- function(dataset, i=NULL, cache=TRUE, suffix=".dat") {
+  ## Set flag noarray if i is null:
+  if (is.null(i)) {
+    noarray <- TRUE
+    i <- 1
+  }
   ## Create cache list if it doesn't exist 
   cachename <- paste("cache.", dataset, sep="")
   if (!exists(cachename)) {
@@ -63,7 +68,13 @@ get.dataset <- function(dataset, i, cache=TRUE) {
   }
 
   ## Otherwise read the file
-  dat <- try(read.table(file=sprintf("%s-%05d",dataset,i),header=TRUE),TRUE)
+  if (noarray) {
+    file <- sprintf("%s%s", dataset, suffix)
+  } else {
+    file <- sprintf("%s-%05d%s", dataset, i, suffix)
+  }
+
+  dat <- try(read.table(file=file, header=TRUE), TRUE)
   if (!inherits(dat,"try-error")) {
     ## Cache the data before returning
     eval(parse(text=paste(cachename, "[[i]] <<- dat", sep="")))
@@ -73,12 +84,17 @@ get.dataset <- function(dataset, i, cache=TRUE) {
 }
 
 ## Get a number of datasets and return as a list
-get.datasets <- function(dataset, inds) {
+read.datasets <- function(dataset, inds, suffix=".dat") {
   dat <- list()
   for (i in inds) {
-    dat[[i]] <- get.dataset(dataset, i)
+    dat[[i]] <- read.dataset(dataset, i, suffix)
   }
   return(dat)
+}
+
+## Write a dataset to file
+write.dataset <- function(x, dataset, suffix=".dat") {
+  return(write.table(x, paste(dataset, suffix, sep="")))
 }
 
 ## Report the run numbers of any data missing from all the runs specified in
