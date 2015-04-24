@@ -45,9 +45,19 @@ get.pars <- function(file="pars.dat") {
   return(pars)
 }
 
-## Get dataset i.
-## The first time this data is read it is loaded from file, and then cached.
-## On subsequent calls, it is retreived from the cache
+
+##' The first time this data is read it is loaded from file, and then cached.
+##' On subsequent calls, it is retreived from the cache
+##' @title Read a dataset from file
+##' @param dataset The name of the dataset. This will be stored in
+##' files called \code{<dataset>-0000i<suffix>} where \code{i} is the
+##' index of the dataset
+##' @param i The index of the dataset
+##' @param cache If \code{TRUE}, cache data
+##' @param suffix The suffix of the data files
+##' @return A data frame containing the dataset
+##' @author David Sterratt
+##' @export
 read.dataset <- function(dataset, i=NULL, cache=TRUE, suffix=".dat") {
   ## Set flag noarray if i is null:
   if (is.null(i)) {
@@ -92,9 +102,14 @@ read.datasets <- function(dataset, inds, suffix=".dat") {
   return(dat)
 }
 
-## Write a dataset to file
+##' @title Write a dataset to file
+##' @param x Data frame containing dataset 
+##' @param dataset Name of dataset
+##' @param suffix The suffix of the data file
+##' @author David Sterratt
+##' @export
 write.dataset <- function(x, dataset, suffix=".dat") {
-  return(write.table(x, paste(dataset, suffix, sep="")))
+  write.table(x, paste(dataset, suffix, sep=""))
 }
 
 ## Report the run numbers of any data missing from all the runs specified in
