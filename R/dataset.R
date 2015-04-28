@@ -134,6 +134,7 @@ find.missing.datasets <- function(dataset, ...) {
 ##' filter.table(dat, list(a=1))
 ##' filter.table(dat, list(b=3, c=5))
 filter.table <- function(tab, filt=list()) {
+  warning("This function is deprecated in favour of R's built-in subset()".)
   missing <- ((names(filt) %in% names(tab))==FALSE)
   if (any(missing)) {
     print("filter.table: These filters do not exist in table:")
