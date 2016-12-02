@@ -22,5 +22,5 @@ getDeps <- function(pkg) {
   if (is.null(toget)) {
     return(toget)
   }
-  return(c(toget, unlist(sapply(toget, getDeps))))
+  return(sort(unique(c(toget, unlist(sapply(toget, getDeps))))))
 }
