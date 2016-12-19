@@ -13,7 +13,7 @@ divisors(n)
 The divisors
 }
 \description{
-Find the integer divisors (including \code{1} and \code{n} of \code{n}
+Find the integer divisors (including \code{1} and \code{n}) of \code{n}.
 }
 \author{
 David Sterratt

@@ -14,7 +14,7 @@ necklace <- function(k, n) {
   return(1/n*sum(sapply(d, numbers::eulersPhi) * k^(n/d)))
 }
 
-##' Find the integer divisors (including \code{1} and \code{n} of \code{n}
+##' Find the integer divisors (including \code{1} and \code{n}) of \code{n}.
 ##' 
 ##' @title Find divisors
 ##' @param n Number to find divisors of
@@ -22,6 +22,6 @@ necklace <- function(k, n) {
 ##' @author David Sterratt
 ##' @export
 divisors <- function(n) {
-  ## logic for n = 0
+  ## FIXME: logic for n = 0 should be implemented
   return((1:n)[(n %% 1:n) == 0])
 }
